@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#1976d2">
-<title>Minha Lista de Mercado</title>
+<title>Minha Lista de Mercado - v6</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;background:#f3f6f9;color:#222;font-family:Arial,sans-serif}
@@ -40,7 +40,7 @@ small{font-weight:400;color:#777}
 <section class="card">
 <label for="produto">Produto</label>
 <input id="produto" autocomplete="off" placeholder="Ex.: Arroz">
-<button id="add" class="add" type="button">＋ ADICIONAR PRODUTO</button>
+<form id="formAdd" onsubmit="return adicionar();" style="margin:0"><button id="add" class="add" type="submit">＋ ADICIONAR PRODUTO</button></form>
 <button id="installHelp" type="button" style="width:100%;height:48px;margin-top:10px;border:0;border-radius:10px;background:#e8f0fe;color:#1456a0;font-weight:700;font-size:16px">📱 COLOCAR NA TELA DE INÍCIO</button>
 <div id="help" style="display:none;margin-top:10px;padding:12px;border-radius:10px;background:#f3f7fc;font-size:14px;line-height:1.5">
 <b>No iPhone:</b><br>
@@ -86,7 +86,9 @@ function adicionar(){
  if(!nome){alert("Digite o nome do produto.");campo.focus();return;}
  itens.push({id:String(Date.now())+Math.random(),produto:nome,quantidade:null,preco:null,comprado:false});
  salvar();render();
- campo.value="";campo.focus();
+ campo.value="";
+ try{campo.focus();}catch(e){}
+ return false;
 }
 
 function render(){
@@ -122,10 +124,9 @@ function atualizar(id){
  // Reposiciona o cursor no campo que estava sendo editado após a atualização.
 }
 
-document.getElementById("add").addEventListener("click",adicionar);
-document.getElementById("installHelp").addEventListener("click",function(){
+document.getElementById("installHelp").onclick=function(){
   var x=document.getElementById("help"); x.style.display=x.style.display==="none"?"block":"none";
-});
+};
 
 document.getElementById("lista").addEventListener("input",function(e){
  var el=e.target.closest(".item");if(!el)return;
@@ -164,9 +165,6 @@ document.getElementById("clearBought").addEventListener("click",function(){
 document.getElementById("clearAll").addEventListener("click",function(){
  if(itens.length&&!confirm("Apagar toda a lista?"))return;
  itens=[];salvar();render();
-});
-document.getElementById("produto").addEventListener("keydown",function(e){
- if(e.key==="Enter"){e.preventDefault();adicionar();}
 });
 render();
 })();
